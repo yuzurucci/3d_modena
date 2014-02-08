@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="utf-8">
+		<title>THREE.js????K</title>
+	</head>
+	<body>
+		<div id="ThreeJS"></div>
+		<script src="three.min.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		
+
+<script>
+/*
+	Three.js "tutorials by example"
+	Author: Lee Stemkoski
+	Date: July 2013 (three.js v59dev)
+
+
+*/
+
+// MAIN
+
+var container, scene, camera, renderer, controls, stats, cylinder;
+var cube;
+
+init();
+animate();
+
+// FUNCTIONS 		
+function init() 
+{
+
+
+
+	// SCENE
+	scene = new THREE.Scene();
+
+
+
+	// CAMERA
+	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	
+	var VIEW_ANGLE = 75, ASPECT = 1.5, NEAR = 0.1, FAR = 1000;
+	
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	
+	scene.add(camera);
+	camera.position.set(0,150,400);
+	camera.lookAt(scene.position);	
+
+	// RENDERER
+	renderer = new THREE.WebGLRenderer();
+	renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+	renderer.setSize(1200,800);
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+	//renderer.shadowMapEnabled = true;
+
+	controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+	var loader = new THREE.JSONLoader();
+	
+
+
+	//json.castShadow = true;
+	
+
+
+	loader.load( 'modena.js', function ( geometry, materials ){
+	       	var faceMaterial = new THREE.MeshFaceMaterial( materials );
+    		json2 = new THREE.Mesh( geometry, faceMaterial );
+    		json2.position.set( -100,0,0);
+    		json2.scale.set( 20, 20, 20 );
+    		scene.add( json2 );
+    		});
+
+	//json2.castShadow = true;
+
+
+
+	// LIGHT
+	var light = new THREE.DirectionalLight(0xFFFFFF, 1.0, 0);
+	var light = new THREE.PointLight(0xffffff);
+	light.position.set(100,100,200);
+	scene.add(light);
+
+	// LIGHT
+	//var light = new THREE.SpotLight(0xcccccc, 1.0, 0);
+	//light.position.set(150,0,300);
+	//light.castShadow = true;
+	//scene.add(light);
+
+		
+	/* ----------
+     LINE
+	------------*/
+			
+	//geometry????????
+	var line1_geometry = new THREE.Geometry();
+	var line2_geometry = new THREE.Geometry();
+	var line3_geometry = new THREE.Geometry();
+
+	//???_???W????
+	line1_geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 0) ) ); 
+	line1_geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 150, 0) ) ); 
+
+	line2_geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 0) ) ); 
+	line2_geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 150, 0, 0) ) ); 
+
+	line3_geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 0) ) ); 
+	line3_geometry.vertices.push( new THREE.Vertex( new THREE.Vector3( 0, 0, 150) ) ); 
+
+	//???I?u?W?F?N?g?????	
+	var line1 = new THREE.Line( line1_geometry, new THREE.LineBasicMaterial( { color: 0x990000} ) ); // red y
+	var line2 = new THREE.Line( line2_geometry, new THREE.LineBasicMaterial( { color: 0x00FF00} ) ); //green x
+	var line3 = new THREE.Line( line3_geometry, new THREE.LineBasicMaterial( { color: 0x0033FF} ) ); // z
+
+	scene.add( line1 );	
+	scene.add( line2 );	
+	scene.add( line3 );	
+	
+//-------
+   cube	
+//-------
+
+	cube = new THREE.Mesh(
+    	new THREE.CubeGeometry(10,10,10),                //å`èÛÇÃê›íË
+        new THREE.MeshLambertMaterial({color: 0xff0000}) //çﬁéøÇÃê›íË
+    );
+    scene.add(cube);
+    cube.position.set(0,0,0);
+
+
+//--------
+  plane
+//--------
+
+    var planeGeometry = new THREE.PlaneGeometry(800,800);
+    var planeMaterial = new THREE.MeshBasicMaterial({color: 0xcccccc});
+    var plane = new THREE.Mesh(planeGeometry,planeMaterial);
+	//plane.receiveShadow  = true;
+	plane.rotation.x=-0.5*Math.PI;
+    plane.position.x=15
+    plane.position.y=0
+    plane.position.z=0
+
+    // add the plane to the scene
+    scene.add(plane);
+
+/*
+	var plane =  new THREE.Mesh(                                      
+    	new THREE.PlaneGeometry(500, 500, 100, 100),
+        new THREE.MeshLambertMaterial({ 
+        color: 0xFFFFFF,
+        wireframe: true
+        //color: 'blue'
+        }));                      
+
+	plane.rotation.x = -Math.PI / 2;
+
+	scene.add(plane);         
+*/
+
+
+	
+}
+
+function animate() 
+{
+    requestAnimationFrame( animate );
+	render();		
+	update();
+}
+
+function update()
+{
+	
+	controls.update();
+	//stats.update();
+}
+
+function render() 
+{
+	renderer.render( scene, camera );
+}
+
+</script>
+
+</body>
+</html>
